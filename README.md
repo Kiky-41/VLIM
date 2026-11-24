@@ -43,7 +43,7 @@ $$\sum_{i=1}^{N}P_i=P_D,\qquad P_i^{\min}\le P_i\le P_i^{\max},\qquad -R_i^{D}\l
 
 Equal incremental cost gives the dispatch for the whole fleet at once:
 
-$$\mathbf{P}(\lambda)=\operatorname{clip}\!\left(\frac{\lambda\mathbf{1}-\mathbf{b}}{2\mathbf{c}},\;\mathbf{P}^{\min},\;\mathbf{P}^{\max}\right).$$
+$$\mathbf{P}(\lambda)=\operatorname{clip}\left(\frac{\lambda\mathbf{1}-\mathbf{b}}{2\mathbf{c}},\quad\mathbf{P}^{\min},\quad\mathbf{P}^{\max}\right).$$
 
 The clip handles both limit cases: a unit below its minimum is fixed at $P_i^{\min}$, and a unit above its maximum is fixed at $P_i^{\max}$. Only the remaining units follow the linear rule.
 
@@ -59,7 +59,7 @@ The denominator $\sum_i1/(2c_i)$ is the total sensitivity of generation to the m
 
 Ramp limits are applied as one masked vector operation against the previous hour:
 
-$$\mathbf{P}\leftarrow\mathbf{P}^{t-1}+\operatorname{clip}\!\left(\mathbf{P}-\mathbf{P}^{t-1},\;-\mathbf{R}^{D},\;\mathbf{R}^{U}\right).$$
+$$\mathbf{P}\leftarrow\mathbf{P}^{t-1}+\operatorname{clip}\left(\mathbf{P}-\mathbf{P}^{t-1},\quad-\mathbf{R}^{D},\quad\mathbf{R}^{U}\right).$$
 
 The clip keeps the change of each unit inside its ramp band; a positive difference is capped by the ramp-up limit and a negative difference by the ramp-down limit.
 
