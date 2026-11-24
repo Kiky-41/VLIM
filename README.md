@@ -107,15 +107,19 @@ Input data is **not included**. Place files in `data/` (notebooks) or next to th
 | ELIM | 32,542.44 | 0.1233 |
 | LIM | 32,549.80 | 2.556 |
 
+VLIM returns 32,183.16 USD/h, 1.10% under ELIM and 1.13% under LIM, in 0.00494 s. That is 25 times faster than ELIM and 517 times faster than LIM on the same 11-unit case.
+
 ### Test system 2, 4,280.712 MW, limits + ramp rate
 
 | Method | Cost (IDR) | Power balance | Generation limits | Ramp rate |
 |---|---|---|---|---|
 | VLIM | 1,026,864,483.34 | met | met | met |
 | LIM | 1,026,864,483.34 | met | met | met |
-| LIM-WOA | 933,084,801.10 | met | met | met |
+| LIM-WOA | 933,084,801.10 | met | not met | met |
 | LIM-GSA | 603,026,008.08 | not met | not met | met |
 | ABC | 1,159,737,275.95 | met | met | met |
+
+VLIM and LIM produce the same 1,026,864,483.34 IDR schedule, while LIM-GSA's 603,026,008.08 IDR is discarded because it misses power balance and generation limits. LIM-WOA is 9.13% cheaper but violates generation limits, so VLIM is the best entry that satisfies all three constraints.
 
 ### Test system 3, 42-unit, 8,761.424 MW, 24 hours
 
@@ -127,6 +131,8 @@ Input data is **not included**. Place files in `data/` (notebooks) or next to th
 | LIM-GSA | 1,843,073,779.59 | met | met | met |
 | ABC | 1,744,835,366.00 | met | met | met |
 | GA | 1,794,132,085.85 | met | met | met |
+
+Across the 24-hour profile VLIM totals 1,408,695,239.64 IDR, tied with LIM and the cheapest feasible result; LIM-WOA's 1,373,466,150.47 IDR is again disqualified by the limit violation. VLIM is 23.6% under LIM-GSA, 19.3% under ABC and 21.5% under GA.
 
 
 ## Requirements
