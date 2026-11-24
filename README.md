@@ -97,6 +97,16 @@ Input data is **not included**. Place files in `data/` (notebooks) or next to th
 | `power_demand42u.xlsx` | Sheet1: `load` |
 
 
+## Results
+
+| Metric | Value |
+|---|---|
+| Test case | 42-unit Jamali, 24 hours |
+| Solver | vectorised $\lambda$ iteration |
+| Per-hour work | one clipped vector expression plus one multiplier correction |
+| Reference | computation time compared against loop-based lambda iteration |
+
+
 ## Requirements
 
 Python. Python notebooks: `numpy`, `pandas`, `scipy`, `matplotlib` (as imported). MATLAB scripts: R2021a+.
