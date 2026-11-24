@@ -15,7 +15,7 @@ The economic dispatch process in power markets aims to find the optimal generati
 
 ## Proposed method
 
-VLIM is the lambda iteration method rewritten with whole-array NumPy operations. Instead of looping over units, the dispatch for a trial $\lambda$ is one clipped vector expression, and $\lambda$ is corrected by the exact linearisation of the power-balance equation, so the number of iterations no longer scales with the unit count.
+VLIM is the lambda iteration method rewritten with whole-array NumPy operations. For a trial $\lambda$, the dispatch of all units is one clipped vector expression, and $\lambda$ is corrected by the exact linearisation of the power-balance equation. The number of iterations therefore no longer grows with the number of units, and each iteration costs a few vector operations instead of a Python loop over generators. The same routine is applied hour by hour to the 42-unit Jamali load profile.
 
 ### Problem formulation
 
@@ -23,37 +23,59 @@ $$\min F=\sum_{i=1}^{N}\left(a_i+b_iP_i+c_iP_i^2\right)$$
 
 subject to
 
-$$\sum_{i=1}^{N}P_i=P_D,\qquad P_i^{\min}\le P_i\le P_i^{\max},\qquad -R_i^{D}\le P_i^{t}-P_i^{t-1}\le R_i^{U}$$
+$$\sum_{i=1}^{N}P_i=P_D,\qquad P_i^{\min}\le P_i\le P_i^{\max},\qquad -R_i^{D}\le P_i^{t}-P_i^{t-1}\le R_i^{U}.$$
+
+### Notation
+
+| Symbol | Meaning | Unit |
+|---|---|---|
+| $N$ | number of units | – |
+| $\mathbf{P}$ | dispatch vector $[P_1,\dots,P_N]^\top$ | MW |
+| $\mathbf{b},\mathbf{c}$ | vectors of linear and quadratic cost coefficients | USD/MWh, USD/MW²h |
+| $\mathbf{P}^{\min},\mathbf{P}^{\max}$ | generation limit vectors | MW |
+| $\mathbf{R}^{U},\mathbf{R}^{D}$ | ramp-up and ramp-down vectors | MW per hour |
+| $P_D$ | demand of the current hour | MW |
+| $\lambda$ | common incremental cost | USD/MWh |
+| $\mathbf{1}$ | vector of ones | – |
+| $t$ | hour index | – |
 
 ### Vectorised lambda iteration
 
-Equal incremental cost gives, for the whole fleet at once,
+Equal incremental cost gives the dispatch for the whole fleet at once:
 
-$$\mathbf{P}(\lambda)=\operatorname{clip}\!\left(\frac{\lambda\mathbf{1}-\mathbf{b}}{2\mathbf{c}},\;\mathbf{P}^{\min},\;\mathbf{P}^{\max}\right)$$
+$$\mathbf{P}(\lambda)=\operatorname{clip}\!\left(\frac{\lambda\mathbf{1}-\mathbf{b}}{2\mathbf{c}},\;\mathbf{P}^{\min},\;\mathbf{P}^{\max}\right).$$
 
-with $\mathbf 1$ a vector of ones. Linearising $\sum_iP_i(\lambda)$ around $\lambda_k$:
+The clip handles both limit cases: a unit below its minimum is fixed at $P_i^{\min}$, and a unit above its maximum is fixed at $P_i^{\max}$. Only the remaining units follow the linear rule.
 
-$$\sum_iP_i(\lambda_k+\Delta\lambda)\approx\sum_iP_i(\lambda_k)+\Delta\lambda\sum_i\frac{1}{2c_i}$$
+To update $\lambda$, linearise the total generation around the current multiplier:
 
-and requiring the left side to equal $P_D$ gives the vectorised multiplier update
+$$\sum_iP_i(\lambda_k+\Delta\lambda)\approx\sum_iP_i(\lambda_k)+\Delta\lambda\sum_i\frac{1}{2c_i}.$$
 
-$$\lambda_{k+1}=\lambda_k+\frac{P_D-\sum_iP_i(\lambda_k)}{\sum_i\frac{1}{2c_i}}$$
+Requiring the left side to equal $P_D$ gives the correction
+
+$$\lambda_{k+1}=\lambda_k+\frac{P_D-\sum_iP_i(\lambda_k)}{\sum_i\frac{1}{2c_i}}.$$
+
+The denominator $\sum_i1/(2c_i)$ is the total sensitivity of generation to the multiplier, so the step is exact for the unconstrained units and converges quickly even when some units are clipped.
 
 Ramp limits are applied as one masked vector operation against the previous hour:
 
-$$\mathbf{P}\leftarrow\mathbf{P}^{t-1}+\operatorname{clip}\!\left(\mathbf{P}-\mathbf{P}^{t-1},\;-\mathbf{R}^{D},\;\mathbf{R}^{U}\right)$$
+$$\mathbf{P}\leftarrow\mathbf{P}^{t-1}+\operatorname{clip}\!\left(\mathbf{P}-\mathbf{P}^{t-1},\;-\mathbf{R}^{D},\;\mathbf{R}^{U}\right).$$
+
+The clip keeps the change of each unit inside its ramp band; a positive difference is capped by the ramp-up limit and a negative difference by the ramp-down limit.
 
 Iteration stops when $\left|P_D-\sum_iP_i\right|\le10^{-5}$ MW.
 
 ### Algorithm
 
-1. Initialise $\lambda=\max_i b_i$, $\mathbf P=\mathbf 0$.
+1. Initialise $\lambda=\max_i b_i$ and $\mathbf P=\mathbf 0$.
 2. Compute $\mathbf P(\lambda)$ with one clipped vector expression.
 3. Apply the masked ramp projection for $t>1$.
-4. Correct $\lambda$ with the balance linearisation; repeat from step 2.
+4. Correct $\lambda$ with the balance linearisation and repeat from step 2.
 5. Evaluate the cost and record unit schedules, ramp rates and limit violations.
 
-The 42-unit Jamali 24-hour case is solved hour by hour with this loop; the reported implementation is the reference for the computation-time comparison in the paper.
+### Implementation note
+
+The notebook divides the reported cost by 1000, so the printed values are in thousands of the input currency unit. The README keeps the objective in the input unit.
 
 ## Contents
 
