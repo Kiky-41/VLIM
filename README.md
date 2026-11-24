@@ -28,17 +28,13 @@ $$\sum_{i=1}^{N}P_i=P_D,\qquad P_i^{\min}\le P_i\le P_i^{\max},\qquad -R_i^{D}\l
 
 ### Notation
 
-| Symbol | Meaning | Unit |
-|---|---|---|
-| $N$ | number of units | – |
-| $\mathbf{P}$ | dispatch vector $[P_1,\dots,P_N]^\top$ | MW |
-| $\mathbf{b},\mathbf{c}$ | vectors of linear and quadratic cost coefficients | USD/MWh, USD/MW²h |
-| $\mathbf{P}^{\min},\mathbf{P}^{\max}$ | generation limit vectors | MW |
-| $\mathbf{R}^{U},\mathbf{R}^{D}$ | ramp-up and ramp-down vectors | MW per hour |
-| $P_D$ | demand of the current hour | MW |
-| $\lambda$ | common incremental cost | USD/MWh |
-| $\mathbf{1}$ | vector of ones | – |
-| $t$ | hour index | – |
+| Symbol | Meaning | Symbol | Meaning |
+|---|---|---|---|
+| $N$ | number of units | $P_D$ | demand of the current hour (MW) |
+| $\mathbf{P}$ | dispatch vector $[P_1,\dots,P_N]^\top$ (MW) | $\lambda$ | common incremental cost (USD/MWh) |
+| $\mathbf{b},\mathbf{c}$ | vectors of linear and quadratic cost coefficients (USD/MWh, USD/MW²h) | $\mathbf{1}$ | vector of ones |
+| $\mathbf{P}^{\min},\mathbf{P}^{\max}$ | generation limit vectors (MW) | $t$ | hour index |
+| $\mathbf{R}^{U},\mathbf{R}^{D}$ | ramp-up and ramp-down vectors (MW per hour) |  |  |
 
 ### Vectorised lambda iteration
 
