@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+message: "If you use this code or results, you must cite the paper below (CC BY 4.0 attribution requirement)."
+title: "VLIM: Vectorized Lambda Iteration Method for Swift Economic Dispatch Analysis"
+type: software
+license: CC-BY-4.0
+repository-code: "https://github.com/Kiky-41/VLIM"
+authors:
+  - family-names: "Ikhsan"
+    given-names: "Rifki Rahman Nur"
+  - family-names: "Raharjo"
+    given-names: "Jangkung"
+  - family-names: "Rahmat"
+    given-names: "Basuki"
+preferred-citation:
+  type: article
+  title: "Vectorized Lambda Iteration Method for Swift Economic Dispatch Analysis"
+  authors:
+    - family-names: "Ikhsan"
+      given-names: "Rifki Rahman Nur"
+    - family-names: "Raharjo"
+      given-names: "Jangkung"
+    - family-names: "Rahmat"
+      given-names: "Basuki"
+  journal: "Evergreen"
+  year: 2024
+  doi: 10.5109/7172306
