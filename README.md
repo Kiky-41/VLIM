@@ -99,12 +99,34 @@ Input data is **not included**. Place files in `data/` (notebooks) or next to th
 
 ## Results
 
-| Metric | Value |
-|---|---|
-| Test case | 42-unit Jamali, 24 hours |
-| Solver | vectorised $\lambda$ iteration |
-| Per-hour work | one clipped vector expression plus one multiplier correction |
-| Reference | computation time compared against loop-based lambda iteration |
+### Test system 1, power balance only
+
+| Method | Cost (USD/h) | Time (s) |
+|---|---|---|
+| VLIM | 32,183.16 | 0.00494 |
+| ELIM | 32,542.44 | 0.1233 |
+| LIM | 32,549.80 | 2.556 |
+
+### Test system 2, 4,280.712 MW, limits + ramp rate
+
+| Method | Cost (IDR) | Power balance | Generation limits | Ramp rate |
+|---|---|---|---|---|
+| VLIM | 1,026,864,483.34 | met | met | met |
+| LIM | 1,026,864,483.34 | met | met | met |
+| LIM-WOA | 933,084,801.10 | met | met | met |
+| LIM-GSA | 603,026,008.08 | not met | not met | met |
+| ABC | 1,159,737,275.95 | met | met | met |
+
+### Test system 3, 42-unit, 8,761.424 MW, 24 hours
+
+| Method | Cost (IDR) | Power balance | Generation limits | Ramp rate |
+|---|---|---|---|---|
+| VLIM | 1,408,695,239.64 | met | met | met |
+| LIM | 1,408,695,239.64 | met | met | met |
+| LIM-WOA | 1,373,466,150.47 | met | met | met |
+| LIM-GSA | 1,843,073,779.59 | met | met | met |
+| ABC | 1,744,835,366.00 | met | met | met |
+| GA | 1,794,132,085.85 | met | met | met |
 
 
 ## Requirements
