@@ -69,7 +69,7 @@ Iteration stops when $\left|P_D-\sum_iP_i\right|\le10^{-5}$ MW.
 
 1. Initialise $\lambda=\max_i b_i$ and $\mathbf P=\mathbf 0$.
 2. Compute $\mathbf P(\lambda)$ with one clipped vector expression.
-3. Apply the masked ramp projection for $t>1$.
+3. Apply the masked ramp projection for $t\gt1$.
 4. Correct $\lambda$ with the balance linearisation and repeat from step 2.
 5. Evaluate the cost and record unit schedules, ramp rates and limit violations.
 
